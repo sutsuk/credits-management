@@ -1,0 +1,53 @@
+@charset "UTF-8";
+
+body {
+  padding:0px;
+  margin:0px 5px;
+  font-size:12px;
+  background:#ddeeff;
+}
+
+.heading {
+  margin:10px 0px;
+  font-size:18px;
+}
+
+.row ul {
+  display:table;
+  text-align:middle;
+  white-space:nowrap;
+  margin:0px;
+  padding:0px;
+}
+
+.row ul li {
+  padding:0px;
+  vertical-align:middle;
+  display:table-cell;
+}
+
+.border ul li {
+  border:solid 1px #000000;
+}
+
+.border ul li div {
+  padding:0px;
+}
+
+dialog {
+  vertical-align:middle;
+}
+
+#showmode {
+  padding:0px 10px;
+  margin:0px 10px;
+}
+
+.table {
+  margin-bottom:20px;
+}
+
+.addElement {
+  display: inline;
+}
+

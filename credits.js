@@ -20,6 +20,55 @@ function $(id){
   return document.getElementById(id)
 }
 
+function CreditCalc(){
+  var i;
+  for(i = 0; i < category.length; i++){
+    earned_credits[i] = 0;
+  }
+  for(i = 0; i < subject.length; i++){
+    SumCredits(category_number[i], credits[i]);
+  }
+  return;
+}
+
+function SumCredits(target_category, add_credits){
+  var diff;
+  var earned = earned_credits[target_category];
+  var calcto = parent_category[target_category];
+  var necessary = necessary_credits[target_category];
+  earned_credits[target_category] = earned + add_credits;
+  earned = earned_credits[target_category];
+  if(necessary > 0){
+    $("c" + target_category).innerHTML = "　" + earned + " / " + necessary;
+    diff = earned - necessary;
+    if(diff < 0){
+      $("c" + target_category).innerHTML = $("c" + target_category).innerHTML + "（あと " + diff + " 単位）";
+    }else{
+      $("c" + target_category).innerHTML = $("c" + target_category).innerHTML + "（完了）";
+    }
+  }
+  if(calcto > -1){
+    SumCredits(calcto, add_credits);
+  }
+  return;
+}
+
+function ChangeShowMode(){
+  var i;
+  var mode = $("showmode").value;
+  var target = document.getElementsByClassName("addElement");
+  if(mode == 0){
+    for(i = 0; i < target.length; i++){
+      target[i].style.display = "inline";
+    }
+  }else{
+    for(i = 0; i < target.length; i++){
+      target[i].style.display = "none";
+    }
+  }
+  return;
+}
+
 function ShowAddDialog(target_number){
   addto = target_number;
   $("smode").style.display = "none";

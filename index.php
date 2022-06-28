@@ -13,7 +13,22 @@
     <script type="text/javascript" src="credits.js"></script>
   </head>
   <body onload="init()">
-    <h1 class="heading">単位管理ページ</h1>
+    <div class="row">
+      <ul>
+        <li>
+          <h1 class="heading">単位管理ページ</h1>
+        </li>
+        <li>
+          <select id="showmode" onchange="ChangeShowMode()">
+            <option value="0">編集モード</option>
+            <option value="1">閲覧モード</option>
+          </select>
+	</li>
+        <li>
+          <input type="button" value="単位計算" onclick="CreditCalc()">
+        </li>
+      </ul>
+    </div>
     <noscript>
       <h1 class="heading">JavaScriptが有効ではありません</p>
     </noscript>

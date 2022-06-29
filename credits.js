@@ -40,8 +40,8 @@ function SumCredits(target_category, add_credits){
   earned = earned_credits[target_category];
   if(necessary > 0){
     $("c" + target_category).innerHTML = "　" + earned + " / " + necessary;
-    diff = earned - necessary;
-    if(diff < 0){
+    diff = necessary - earned;
+    if(diff > 0){
       $("c" + target_category).innerHTML = $("c" + target_category).innerHTML + "（あと " + diff + " 単位）";
     }else{
       $("c" + target_category).innerHTML = $("c" + target_category).innerHTML + "（完了）";
@@ -139,7 +139,7 @@ function EnterAddDialog(){
     if(add_necessary_credits == ""){
       add_necessary_credits = 0;
     }
-    addSubject(addto, add_subject, parseFloat(add_credits), parseInt(add_grade), parseInt(add_term), add_day, add_time, 0);
+    addSubject(addto, add_subject, parseFloat(add_credits), parseInt(add_grade), parseInt(add_term), add_day, add_time);
   }else if(add_mode == "c"){
     add_category = $("newcategory").value;
     add_necessary_credits = $("necessarycredits").value;
@@ -151,7 +151,7 @@ function EnterAddDialog(){
       alert("必要単位数を入力してください");
       return;
     }
-    addCategory(addto, add_category, parseInt(add_necessary_credits), 0);
+    addCategory(addto, add_category, parseInt(add_necessary_credits));
   }else{
     alert("追加する要素を選択してください");
   }
@@ -159,7 +159,7 @@ function EnterAddDialog(){
   return;
 }
 
-function addCategory(add_parent, add_category, add_necessary_credits, mode){
+function addCategory(add_parent, add_category, add_necessary_credits){
   var tar;
   var len = category.length;
   if(add_parent == -1){
@@ -167,12 +167,10 @@ function addCategory(add_parent, add_category, add_necessary_credits, mode){
   }else{
     tar = $("l" + add_parent);
   }
-  if(mode == 0){
-    parent_category.push(add_parent);
-    category.push(add_category);
-    necessary_credits.push(add_necessary_credits);
-    earned_credits.push(0);
-  }
+  parent_category.push(add_parent);
+  category.push(add_category);
+  necessary_credits.push(add_necessary_credits);
+  earned_credits.push(0);
   if(add_necessary_credits > 0){
     tar.insertAdjacentHTML('beforeend', '<div class="row border"><ul><li>　' + add_category + '　</li><li><div id="l' + len + '"></div><input type="button" class="addElement" value="要素を追加" onclick="ShowAddDialog(' + len + ')"></li><li id="c' + len + '">　' + add_necessary_credits + '　</li></ul></div>');
   }else{
@@ -181,7 +179,7 @@ function addCategory(add_parent, add_category, add_necessary_credits, mode){
   return;
 }
 
-function addSubject(add_parent, add_subject, add_credits, add_grade, add_term, add_day, add_time, mode){
+function addSubject(add_parent, add_subject, add_credits, add_grade, add_term, add_day, add_time){
   var tar;
   var len = subject.length;
   if(add_parent == -1){
@@ -189,27 +187,67 @@ function addSubject(add_parent, add_subject, add_credits, add_grade, add_term, a
   }else{
     tar = $("l" + add_parent);
   }
-  if(mode == 0){
-    subject.push(add_subject);
-    credits.push(add_credits);
-    grade.push(add_grade);
-    term.push(add_term);
-    day.push(add_day);
-    time.push(add_time);
-    category_number.push(add_parent);
-  }
+  subject.push(add_subject);
+  credits.push(add_credits);
+  grade.push(add_grade);
+  term.push(add_term);
+  day.push(add_day);
+  time.push(add_time);
+  category_number.push(add_parent);
   tar.insertAdjacentHTML('beforeend', '<div class="row border"><ul><li>　' + add_subject + '　</li><li>　' + add_credits + '　</li></ul></div>');
   return;
 }
 
-function init(){
-  var i, cnm, tar;
+function LoadCategory(){
+  var code = $("categorycode").value;
+  if(code == ""){
+    alert("コードを確認してください");
+  }else{
+    location.href = "https://" + location.hostname + location.pathname + "?category=" + code;
+  }
+  return;
+}
+
+function LoadAll(){
+  var code = $("loadcode").value;
+  if(code == ""){
+    alert("コードを確認してください");
+  }else{
+    location.href = "https://" + location.hostname + location.pathname + "?load=" + code;
+  }
+  return;
+}
+
+function SaveCategory(){
+  var i;
+  var data = "";
   for(i = 0; i < category.length; i++){
-    addCategory(parent_category[i], category[i], necessary_credits[i], 1);
+    data = data + 'addCategory(' + parent_category[i] + ',"' + category[i] + '",' + necessary_credits[i] + ');' + "\n";
   }
+  $("category").value = data;
+  $("subject").value = "";
+  $("dataform").submit();
+  return;
+}
+
+function SaveAll(){
+  var i;
+  var data = "";
+  for(i = 0; i < category.length; i++){
+    data = data + 'addCategory(' + parent_category[i] + ',"' + category[i] + '",' + necessary_credits[i] + ');' + "\n";
+  }
+  $("category").value = data;
+  data = "";
   for(i = 0; i < subject.length; i++){
-    addSubject(category_number[i], subject[i], credits[i], 0, 0, 0, 0, 1);
+    data = data + 'addSubject(' + category_number[i] + ',"' + subject[i] + '",' + credits[i] + ',' + grade[i] + ',' + term[i] + ',"' + day[i] + '",' + time[i] + ');' + "\n";
   }
+  $("subject").value = data;
+  $("dataform").submit();
+  return;
+}
+
+function init(){
+  LoadData();
   return;
 }
 
